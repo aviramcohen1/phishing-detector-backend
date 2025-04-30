@@ -1,14 +1,12 @@
 from flask import Flask, request, jsonify
-import openai
 import os
+from openai import OpenAI
 from flask_cors import CORS
 
-
 app = Flask(__name__)
-CORS(app)  # הוספת התמיכה ב-CORS
+CORS(app)
 
-
-openai.api_key = os.getenv("OPENAI_API_KEY", "sk-...")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "sk-..."))
 
 @app.route('/check_phishing', methods=['POST'])
 def check_phishing():
@@ -29,7 +27,7 @@ def check_phishing():
 """
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": "אתה מומחה אבטחת מידע ועוזר בזיהוי הונאות."},
